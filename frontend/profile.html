@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile - LAN Chat Application</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body style="background-color: var(--bg-primary);">
+
+    <!-- Top Navigation Bar -->
+    <header class="chat-navbar">
+        <div class="navbar-brand">
+            <div class="brand-logo">👤</div>
+            <div>
+                <div class="brand-title">User Profile & Network Status</div>
+                <div class="brand-subtitle">LAN Chat Application</div>
+            </div>
+        </div>
+        <div class="navbar-actions">
+            <a href="/chat" class="btn btn-primary" style="padding: 8px 16px; font-size: 14px;">
+                &larr; Back to Chat
+            </a>
+            <a href="/about" class="btn btn-secondary" style="padding: 8px 16px; font-size: 14px;">
+                📚 CN Concepts
+            </a>
+        </div>
+    </header>
+
+    <div class="content-container">
+        <!-- Profile Card -->
+        <div class="card">
+            <div style="display: flex; align-items: center; gap: 20px; margin-bottom: 24px;">
+                <div class="avatar-circle" id="profileAvatar" style="width: 72px; height: 72px; font-size: 32px; box-shadow: 0 4px 14px rgba(99, 102, 241, 0.4);">
+                    U
+                </div>
+                <div>
+                    <h2 id="profileUsername" style="font-size: 26px; font-weight: 700; margin-bottom: 4px;">Loading...</h2>
+                    <div style="display: flex; align-items: center; gap: 8px; font-size: 14px; color: var(--text-secondary);">
+                        <span class="status-indicator online" style="position: static; width: 8px; height: 8px;"></span>
+                        <span id="profileStatus">Online on Local Network</span>
+                    </div>
+                </div>
+            </div>
+
+            <hr style="border: 0; border-top: 1px solid var(--border-color); margin-bottom: 24px;">
+
+            <!-- Stats Grid -->
+            <div class="stats-grid">
+                <div class="stat-box">
+                    <div class="stat-value" id="profileSentCount">0</div>
+                    <div class="stat-label">Total Messages Sent</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value" id="profileIp" style="font-size: 20px; font-family: monospace;">127.0.0.1</div>
+                    <div class="stat-label">Your Client LAN IP</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value" id="networkLatency" style="font-size: 22px; color: #10b981;">-- ms</div>
+                    <div class="stat-label">HTTP Latency to Server</div>
+                </div>
+            </div>
+
+            <!-- Details List -->
+            <div style="margin-top: 28px; background: var(--bg-card); border-radius: var(--radius-md); padding: 18px 24px; border: 1px solid var(--border-color);">
+                <div style="display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--border-color);">
+                    <span style="color: var(--text-muted);">Account ID:</span>
+                    <strong id="profileUserId">#--</strong>
+                </div>
+                <div style="display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--border-color);">
+                    <span style="color: var(--text-muted);">Joined LAN Network:</span>
+                    <strong id="profileCreatedAt">--</strong>
+                </div>
+                <div style="display: flex; justify-content: space-between; padding: 10px 0;">
+                    <span style="color: var(--text-muted);">LAN Server IP:</span>
+                    <strong id="serverLanIpDisplay">Checking...</strong>
+                </div>
+            </div>
+
+            <div style="margin-top: 24px; text-align: center;">
+                <button id="pingTestBtn" class="btn btn-secondary">
+                    ⚡ Test Network Latency
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function loadProfile() {
+            try {
+                const res = await fetch('/api/profile');
+                if (!res.ok) {
+                    window.location.href = '/login';
+                    return;
+                }
+                const data = await res.json();
+                if (data.success && data.profile) {
+                    const p = data.profile;
+                    document.getElementById('profileUsername').textContent = p.username;
+                    document.getElementById('profileAvatar').textContent = p.username.charAt(0).toUpperCase();
+                    document.getElementById('profileUserId').textContent = `#${p.id}`;
+                    document.getElementById('profileSentCount').textContent = p.total_messages_sent;
+                    document.getElementById('profileIp').textContent = p.client_ip;
+                    document.getElementById('profileCreatedAt').textContent = p.created_at;
+                }
+            } catch (e) {
+                console.error('Failed to load profile:', e);
+            }
+        }
+
+        async function checkLatency() {
+            const label = document.getElementById('networkLatency');
+            label.textContent = 'Testing...';
+            const t0 = performance.now();
+            try {
+                const res = await fetch('/api/status');
+                const t1 = performance.now();
+                const diff = Math.round(t1 - t0);
+                label.textContent = `${diff} ms`;
+                const data = await res.json();
+                if (data.lan_ip) {
+                    document.getElementById('serverLanIpDisplay').textContent = `${data.lan_ip}:${data.port}`;
+                }
+            } catch (e) {
+                label.textContent = 'Error';
+            }
+        }
+
+        document.getElementById('pingTestBtn').addEventListener('click', checkLatency);
+
+        loadProfile();
+        checkLatency();
+    </script>
+</body>
+</html>

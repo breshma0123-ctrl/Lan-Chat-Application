@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LAN Chat Application - Dashboard</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="chat-app">
+
+    <!-- Top Navigation Bar -->
+    <header class="chat-navbar">
+        <div class="navbar-brand">
+            <div class="brand-logo">🌐</div>
+            <div>
+                <div class="brand-title">LAN Chat Application</div>
+                <div class="brand-subtitle">Computer Networks Project</div>
+            </div>
+        </div>
+
+        <div class="navbar-center">
+            <div class="server-ip-pill" id="serverPill" title="Server network address">
+                <div class="pulse-dot"></div>
+                <span class="ip-label">Server: </span>
+                <span id="serverIpDisplay">Connecting...</span>
+            </div>
+        </div>
+
+        <div class="navbar-actions">
+            <div class="user-badge" id="userBadge" title="Logged in user">
+                <div class="avatar-circle" id="currentUserAvatar">U</div>
+                <span id="currentUserName">Loading...</span>
+            </div>
+            <a href="/profile" class="btn btn-secondary" style="padding: 7px 14px; font-size: 13px;" title="View Profile">
+                👤 Profile
+            </a>
+            <a href="/about" class="btn btn-secondary" style="padding: 7px 14px; font-size: 13px;" title="CN Concepts">
+                📚 CN Concepts
+            </a>
+            <button id="logoutBtn" class="btn btn-danger" style="padding: 7px 14px; font-size: 13px;" title="Sign out of LAN">
+                🚪 Logout
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Chat Workspace -->
+    <div class="chat-container">
+
+        <!-- Sidebar: Channels & Users -->
+        <aside class="chat-sidebar" id="chatSidebar">
+            <div class="sidebar-header">
+                <div class="search-box">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" id="userSearchInput" placeholder="Filter users..." autocomplete="off">
+                </div>
+            </div>
+
+            <div class="sidebar-content">
+                <!-- Group Chat Section -->
+                <div class="sidebar-section-title">LAN Channels</div>
+                <div class="sidebar-item active" id="generalChatTab" data-target="general">
+                    <div class="item-avatar">📢</div>
+                    <div class="item-info">
+                        <div class="item-name">
+                            <span>General LAN Chat</span>
+                            <span class="unread-badge" id="generalUnread" style="display: none;">0</span>
+                        </div>
+                        <div class="item-subtext">Broadcast to all LAN users</div>
+                    </div>
+                </div>
+
+                <!-- Online Users Section -->
+                <div class="sidebar-section-title">
+                    <span>Online Users</span>
+                    <span id="onlineCountBadge" class="text-success" style="font-weight: 700;">0</span>
+                </div>
+                <div id="onlineUsersList">
+                    <!-- Populated dynamically by chat.js -->
+                </div>
+
+                <!-- Offline Users Section -->
+                <div class="sidebar-section-title" style="margin-top: 10px;">
+                    <span>Offline Users</span>
+                    <span id="offlineCountBadge" class="text-muted" style="font-weight: 700;">0</span>
+                </div>
+                <div id="offlineUsersList">
+                    <!-- Populated dynamically by chat.js -->
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Chat Area -->
+        <main class="chat-main">
+            <!-- Chat Room Header -->
+            <div class="chat-header">
+                <div class="chat-target-info">
+                    <div class="target-avatar" id="chatHeaderAvatar">📢</div>
+                    <div>
+                        <div class="target-name" id="chatHeaderTitle">General LAN Chat</div>
+                        <div class="target-status" id="chatHeaderStatus">
+                            <span class="pulse-dot" style="width: 6px; height: 6px;"></span>
+                            <span id="chatHeaderSubtitle">Broadcast channel for all connected network clients</span>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <button id="refreshBtn" class="btn btn-secondary" style="padding: 6px 12px; font-size: 12px;" title="Refresh messages">
+                        🔄 Refresh
+                    </button>
+                </div>
+            </div>
+
+            <!-- Messages Stream Container -->
+            <div class="messages-container" id="messagesContainer">
+                <div class="system-pill">Welcome to LAN Chat! Messages sent here reach everyone on the local network.</div>
+            </div>
+
+            <!-- Typing Indicator -->
+            <div class="typing-box" id="typingIndicator" style="visibility: hidden;">
+                <div class="typing-dots">
+                    <span class="typing-dot"></span>
+                    <span class="typing-dot"></span>
+                    <span class="typing-dot"></span>
+                </div>
+                <span id="typingText">Someone is typing...</span>
+            </div>
+
+            <!-- Input Bar -->
+            <div class="chat-input-bar">
+                <div class="chat-input-box">
+                    <input type="text" id="messageInput" class="chat-input" placeholder="Type a message... (Press Enter to send)" autocomplete="off">
+                </div>
+                <button id="sendBtn" class="send-btn" title="Send Message">
+                    ➤
+                </button>
+            </div>
+        </main>
+
+    </div>
+
+    <!-- Socket.IO Client Library (Served directly by Flask-SocketIO for offline LAN support) -->
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/js/chat.js"></script>
+</body>
+</html>

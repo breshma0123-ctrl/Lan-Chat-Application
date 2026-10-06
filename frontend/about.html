@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Computer Networks Concepts - LAN Chat Application</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body style="background-color: var(--bg-primary);">
+
+    <!-- Top Navigation Bar -->
+    <header class="chat-navbar">
+        <div class="navbar-brand">
+            <div class="brand-logo">📚</div>
+            <div>
+                <div class="brand-title">Computer Networks Concepts</div>
+                <div class="brand-subtitle">LAN Chat Application Viva & Theory Guide</div>
+            </div>
+        </div>
+        <div class="navbar-actions">
+            <a href="/chat" class="btn btn-primary" style="padding: 8px 16px; font-size: 14px;">
+                &larr; Return to Chat
+            </a>
+            <a href="/login" class="btn btn-secondary" style="padding: 8px 16px; font-size: 14px;">
+                Sign In
+            </a>
+        </div>
+    </header>
+
+    <div class="content-container">
+        <!-- Overview Card -->
+        <div class="card">
+            <h1 class="card-title">🌐 Computer Networks in this Project</h1>
+            <p style="color: var(--text-secondary); line-height: 1.6; font-size: 15px;">
+                This project implements a decentralized multi-client real-time messaging application over a 
+                <strong>Local Area Network (LAN)</strong> without requiring external internet or third-party cloud services. 
+                Below are the core networking fundamentals implemented in the code.
+            </p>
+
+            <div class="concept-grid">
+
+                <!-- Concept 1: LAN -->
+                <div class="concept-card">
+                    <div class="concept-header">
+                        <span class="concept-badge">LAN</span>
+                        <div class="concept-title">Local Area Network</div>
+                    </div>
+                    <div class="concept-body">
+                        A network covering a small geographical area, such as a home, college lab, or office Wi-Fi. 
+                        Devices communicate directly via local IP addresses (e.g. <code>192.168.x.x</code>) switched by the Wi-Fi router.
+                    </div>
+                    <div class="code-snippet">Router: 192.168.1.1 &#10132; Allocates local IPs to Laptop A, B, and Server</div>
+                </div>
+
+                <!-- Concept 2: IP Address -->
+                <div class="concept-card">
+                    <div class="concept-header">
+                        <span class="concept-badge">Layer 3</span>
+                        <div class="concept-title">IP Address (0.0.0.0 vs 127.0.0.1)</div>
+                    </div>
+                    <div class="concept-body">
+                        An Internet Protocol address identifies a device on a network. 
+                        <strong>127.0.0.1</strong> (localhost) only accepts connections from the same PC. 
+                        Binding the server to <strong>0.0.0.0</strong> instructs the OS to listen on <em>all</em> network adapters, allowing other LAN devices to connect.
+                    </div>
+                    <div class="code-snippet">socketio.run(app, host='0.0.0.0', port=5000)</div>
+                </div>
+
+                <!-- Concept 3: Port Number -->
+                <div class="concept-card">
+                    <div class="concept-header">
+                        <span class="concept-badge">Layer 4</span>
+                        <div class="concept-title">Port Number (:5000)</div>
+                    </div>
+                    <div class="concept-body">
+                        While the IP address directs traffic to the host computer, the <strong>Port Number</strong> directs incoming packets to the exact application process. 
+                        Our Flask server listens on port <strong>5000</strong>.
+                    </div>
+                    <div class="code-snippet">http://192.168.1.10:5000 &#10132; Port 5000 routes packets to Python</div>
+                </div>
+
+                <!-- Concept 4: Client-Server Architecture -->
+                <div class="concept-card">
+                    <div class="concept-header">
+                        <span class="concept-badge">Arch</span>
+                        <div class="concept-title">Client-Server Architecture</div>
+                    </div>
+                    <div class="concept-body">
+                        A centralized model where the <strong>Server</strong> acts as the central hub managing user state, rooms, authentication, and database persistence, 
+                        while <strong>Clients</strong> (browsers on PCs/phones) render the UI and exchange events.
+                    </div>
+                    <div class="code-snippet">Client A &#10132; WebSocket &#10132; Flask Server &#10132; Client B</div>
+                </div>
+
+                <!-- Concept 5: TCP/IP Protocol Stack -->
+                <div class="concept-card">
+                    <div class="concept-header">
+                        <span class="concept-badge">Transport</span>
+                        <div class="concept-title">TCP (Transmission Control Protocol)</div>
+                    </div>
+                    <div class="concept-body">
+                        Underlying both HTTP and WebSockets is <strong>TCP</strong>. TCP guarantees ordered, reliable, connection-oriented packet delivery using 3-way handshakes (SYN, SYN-ACK, ACK) and retransmissions.
+                    </div>
+                    <div class="code-snippet">TCP 3-Way Handshake &#10132; Reliable Byte Stream &#10132; Zero Packet Loss</div>
+                </div>
+
+                <!-- Concept 6: WebSockets vs HTTP -->
+                <div class="concept-card">
+                    <div class="concept-header">
+                        <span class="concept-badge">Protocol</span>
+                        <div class="concept-title">WebSocket vs. HTTP Polling</div>
+                    </div>
+                    <div class="concept-body">
+                        <strong>HTTP</strong> is unidirectional (client requests, server responds, connection closes). 
+                        <strong>WebSocket</strong> establishes a persistent, full-duplex TCP channel over a single socket, allowing the server to push new messages to clients instantly without polling.
+                    </div>
+                    <div class="code-snippet">HTTP Upgrade Handshake &#10132; Persistent Full-Duplex Stream</div>
+                </div>
+
+                <!-- Concept 7: Socket Rooms & Routing -->
+                <div class="concept-card">
+                    <div class="concept-header">
+                        <span class="concept-badge">Routing</span>
+                        <div class="concept-title">Socket Rooms & Private Messaging</div>
+                    </div>
+                    <div class="concept-body">
+                        Flask-SocketIO provides logical <strong>Rooms</strong>. 
+                        Every user automatically joins room <code>general</code> (for broadcasts) and a private room named after their <code>username</code> for direct 1-to-1 secure message delivery.
+                    </div>
+                    <div class="code-snippet">emit('private_message', data, room=receiver_username)</div>
+                </div>
+
+                <!-- Concept 8: Concurrency & Threads -->
+                <div class="concept-card">
+                    <div class="concept-header">
+                        <span class="concept-badge">Systems</span>
+                        <div class="concept-title">Multi-Client Concurrency</div>
+                    </div>
+                    <div class="code-snippet">async_mode="threading"</div>
+                    <div class="concept-body" style="margin-top: 8px;">
+                        The server handles multiple concurrent network connections simultaneously using background threads, isolating client socket reads and writes.
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- System Architecture Flow -->
+        <div class="card">
+            <h2 class="card-title">📊 End-to-End Packet Lifecycle</h2>
+            <div style="background-color: var(--bg-card); padding: 20px; border-radius: var(--radius-md); font-family: monospace; font-size: 13.5px; line-height: 1.7; overflow-x: auto; color: #a5b4fc;">
+1. Client 1 types a message and clicks [SEND]
+2. Browser JavaScript triggers: socket.emit('send_message', payload)
+3. WebSocket frame encapsulated into TCP segment (Port 5000)
+4. Wi-Fi Router routes IP packet to Server Computer (e.g. 192.168.1.10)
+5. Flask-SocketIO processes payload, saves to SQLite (chat.db)
+6. Server broadcasts event: emit('receive_message', data, room='general')
+7. Client 2 receives WebSocket frame over active TCP connection
+8. Browser DOM dynamically appends message bubble without page reload!
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
